@@ -1,3 +1,16 @@
+var aoi = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[54.311345717544235, 26.49654696478046],
+          [54.311345717544235, 24.433560917742728],
+          [57.057927748794235, 24.433560917742728],
+          [57.057927748794235, 26.49654696478046]]], null, false);
 // ==============================================
 // Landsat 8 Collection 2, Level 2 - Cloud Masking and Visualization
 // https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C02_T1_L2
