@@ -1,17 +1,3 @@
-var aoi = 
-    /* color: #d63000 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[54.311345717544235, 26.49654696478046],
-          [54.311345717544235, 24.433560917742728],
-          [57.057927748794235, 24.433560917742728],
-          [57.057927748794235, 26.49654696478046]]], null, false);
-
 // ==============================================
 // Landsat 8 Collection 2, Level 2 - Cloud Masking and Visualization
 // https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C02_T1_L2
@@ -69,6 +55,7 @@ var collection = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2')
 // or if your aoi intersects many tiles
 // the output image is statistically computed
 // ==============================================
+
 var composite = collection.median().clip(aoi);
 
 // ==============================================
@@ -94,27 +81,6 @@ Map.addLayer(composite, {
 
 
 // ==============================================
-// Select the least cloudy image from the collection
-// be careful: it might be just partially inside the aoi
-// this happens when the AOI is large or at the edge of a satellite scene
-// ==============================================
-
-// Sort images by increasing cloud cover
-var leastCloudy = collection.sort('CLOUD_COVER').first();
-
-// Print the acquisition date of the selected image
-print('Least cloudy image date:', 
-      ee.Date(leastCloudy.get('system:time_start')).format('YYYY-MM-dd'));
-
-// Display the least cloudy image
-Map.addLayer(leastCloudy, {
-  bands: ['SR_B4', 'SR_B3', 'SR_B2'],
-  min: 0,
-  max: 0.3,
-  gamma: 1.2 // adjusts contrast: values > 1 darken shadows
-}, 'Least cloudy image');
-
-// ==============================================
 // Export to Google Drive
 // ==============================================
 Export.image.toDrive({
@@ -126,16 +92,4 @@ Export.image.toDrive({
   scale: 30,              // spatial resolution (meters)
   crs: 'EPSG:4326',       // coordinate reference system
   maxPixels: 1e13         // needed for large areas
-});
-
-// least cloudy picture
-Export.image.toDrive({
-  image: leastCloudy.select(['SR_B4', 'SR_B3', 'SR_B2']),
-  description: 'Landsat8_Least_Cloudy',
-  folder: 'GEE_exports',
-  fileNamePrefix: 'landsat8_clear_2020',
-  region: aoi,
-  scale: 30,
-  crs: 'EPSG:4326',
-  maxPixels: 1e13
 });
