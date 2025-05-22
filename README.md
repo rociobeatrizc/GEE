@@ -1,5 +1,5 @@
 # GEE
 Lecture 22/05
 - https://developers.google.com/earth-engine/datasets
-- sentinel: https://code.earthengine.google.com/1dfc8185976eb0c73ffd80ddca66e359
-- landsat: https://code.earthengine.google.com/1f62187eb45458f5498525f975ada31b
+-sentinel: https://code.earthengine.google.com/957b34097e4d6f4dc33ace082ec7cad7
+- landsat: https://code.earthengine.google.com/9a223e7f1f49f5bb0920ca640c5d36dd
