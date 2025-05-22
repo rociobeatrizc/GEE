@@ -11,8 +11,6 @@ var aoi =
           [54.311345717544235, 24.433560917742728],
           [57.057927748794235, 24.433560917742728],
           [57.057927748794235, 26.49654696478046]]], null, false);
-
-
 // ==============================================
 // Sentinel-2 Surface Reflectance - Cloud Masking and Visualization
 // https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED
@@ -76,41 +74,6 @@ Map.addLayer(composite, {
 }, 'Median composite');
 
 // ==============================================
-// Select the least cloudy image from the collection
-// Caution: this image may not cover the entire AOI
-// ==============================================
-
-var leastCloudy = collection.sort('CLOUDY_PIXEL_PERCENTAGE').first();
-
-// Display the least cloudy image
-Map.addLayer(leastCloudy, {
-  bands: ['B4', 'B3', 'B2'],
-  min: 0,
-  max: 0.3,
-  gamma: 1.2
-}, 'Least cloudy image');
-
-// ==============================================
-// Extract image acquisition date from system:index
-// Sentinel-2 SR Harmonized does not include 'system:time_start'
-// Instead, we parse the acquisition date from the image ID
-// Example: '20200101T100319_20200101T100321_T32TQM'
-// ==============================================
-
-var index = ee.String(leastCloudy.get('system:index')); // e.g., '20200101T100319_...'
-var dateString = index.slice(0, 8);                      // Extract 'YYYYMMDD'
-
-// Format as 'YYYY-MM-DD'
-var formattedDate = ee.String(dateString.slice(0, 4))
-                      .cat('-')
-                      .cat(dateString.slice(4, 6))
-                      .cat('-')
-                      .cat(dateString.slice(6, 8));
-
-print('Least cloudy image date (from system:index):', formattedDate);
-
-
-// ==============================================
 // Export to Google Drive
 // ==============================================
 
@@ -126,14 +89,3 @@ Export.image.toDrive({
   maxPixels: 1e13
 });
 
-// Export the least cloudy image
-Export.image.toDrive({
-  image: leastCloudy.select(['B4', 'B3', 'B2']),
-  description: 'Sentinel2_Least_Cloudy',
-  folder: 'GEE_exports',
-  fileNamePrefix: 'sentinel2_clear_2020',
-  region: aoi,
-  scale: 10,
-  crs: 'EPSG:4326',
-  maxPixels: 1e13
-});
